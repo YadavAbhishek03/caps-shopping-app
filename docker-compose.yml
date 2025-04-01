@@ -1,7 +1,16 @@
-version: '2.2'
+version: '3.8'
+
 services:
   web:
     build: .
     ports:
-      - "80:8000"
+      - "8000:8000"  # Expose port 8000 of the container to port 8000 of the host
+    volumes:
+      - ./caps-app:/app  # Mount the local 'caps-app' directory to '/app' inside the container
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
