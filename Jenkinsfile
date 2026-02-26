@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "abhiyadav260/caps-shopping-app"
+	IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
@@ -18,7 +19,10 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:latest .'
+                sh '''
+                docker build -t $DOCKER_IMAGE:$IMAGE_TAG .
+                docker tag $DOCKER_IMAGE:$IMAGE_TAG $DOCKER_IMAGE:latest
+                '''
             }
         }
 
@@ -36,14 +40,17 @@ pipeline {
 
         stage('Push Image to DockerHub') {
             steps {
-                sh 'docker push $DOCKER_IMAGE:latest'
+                sh '''
+                docker push $DOCKER_IMAGE:$IMAGE_TAG
+                docker push $DOCKER_IMAGE:latest
+                '''
             }
         }
 
         stage('Run Container') {
             steps {
                 sh '''
-                docker run -d -p 8000:8000 --name caps-app $DOCKER_IMAGE:latest
+                docker run -d -p 8000:8000 --name caps-app $DOCKER_IMAGE:$IMAGE_TAG
                 '''
             }
         }
