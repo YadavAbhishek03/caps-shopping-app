@@ -54,5 +54,13 @@ pipeline {
                 '''
             }
         }
+	stage('SonarQube Analysis') {
+    	    steps {
+        	withSonarQubeEnv('SonarQube') {
+            	    sh 'sonar-scanner -Dsonar.projectKey=caps-app -Dsonar.sources=./'
+        	}
+    	}
+}
+
     }
 }
