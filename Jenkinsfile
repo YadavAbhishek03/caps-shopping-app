@@ -12,7 +12,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                    ${tool 'SonarScanner'}/bin/sonar-scanner \
+                    sonar-scanner \
                     -Dsonar.projectKey=caps-shopping-app \
                     -Dsonar.sources=.
                     """
