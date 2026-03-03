@@ -11,7 +11,7 @@ pipeline {
         stage('Clean Old Containers') {
             steps {
                 sh '''
-                docker s caps-app || true
+                docker stop caps-app || true
                 docker rm caps-app || true
                 '''
             }
