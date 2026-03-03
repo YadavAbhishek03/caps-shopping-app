@@ -13,11 +13,11 @@ pipeline {
 		script {
             	    def scannerHome = tool 'SonarScanner'
                     withSonarQubeEnv('SonarQube') {
-                    	sh '''
+                    	sh """
                     	${scannerHome}/bin/sonar-scanner \
                     	-Dsonar.projectKey=caps-shopping-app \
                     	-Dsonar.sources=.
-                    	'''
+                    	"""
                     }
             	}
 	    }
