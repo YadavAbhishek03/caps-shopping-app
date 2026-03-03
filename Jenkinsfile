@@ -7,7 +7,7 @@ pipeline {
     }
 
     tools {
-        sonarQubeScanner 'SonarScanner'
+        sonarRunner 'SonarScanner'
     }
 
     stages {
@@ -16,11 +16,9 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                    sonar-scanner \
-                      -Dsonar.projectKey=caps-shopping-app \
-                      -Dsonar.sources=. \
-                      -Dsonar.host.url=http://localhost:9000 \
-                      -Dsonar.login=${SONAR_AUTH_TOKEN}
+                    ${tool 'SonarScanner'}/bin/sonar-scanner \
+		      -Dsonar.projectKey=caps-shopping-app \
+		      -Dsonar.sources=.
                     '''
                 }
             }
