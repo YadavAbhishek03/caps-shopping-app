@@ -11,11 +11,11 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh """
+                    sh '''
                     sonar-scanner \
                     -Dsonar.projectKey=caps-shopping-app \
                     -Dsonar.sources=.
-                    """
+                    '''
                 }
             }
         }
