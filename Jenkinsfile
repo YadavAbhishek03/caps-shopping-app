@@ -3,10 +3,28 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "abhiyadav260/caps-shopping-app"
-	IMAGE_TAG = "${BUILD_NUMBER}"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    tools {
+        sonarQubeScanner 'SonarScanner'
     }
 
     stages {
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                    sonar-scanner \
+                      -Dsonar.projectKey=caps-shopping-app \
+                      -Dsonar.sources=. \
+                      -Dsonar.host.url=http://localhost:9000 \
+                      -Dsonar.login=${SONAR_AUTH_TOKEN}
+                    '''
+                }
+            }
+        }
 
         stage('Clean Old Containers') {
             steps {
@@ -54,12 +72,5 @@ pipeline {
                 '''
             }
         }
-	stage('SonarQube Analysis') {
-    	    steps {
-        	withSonarQubeEnv('SonarQube') {
-            	    sh 'sonar-scanner -Dsonar.projectKey=caps-app -Dsonar.sources=./'
-        	}
-    	    }
-	}
     }
 }
