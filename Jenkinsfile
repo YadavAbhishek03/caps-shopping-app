@@ -6,20 +6,16 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
-    tools {
-        sonarRunner 'SonarScanner'
-    }
-
     stages {
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh '''
+                    sh """
                     ${tool 'SonarScanner'}/bin/sonar-scanner \
-		      -Dsonar.projectKey=caps-shopping-app \
-		      -Dsonar.sources=.
-                    '''
+                    -Dsonar.projectKey=caps-shopping-app \
+                    -Dsonar.sources=.
+                    """
                 }
             }
         }
@@ -66,6 +62,8 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
+                docker stop caps-app || true
+                docker rm caps-app || true
                 docker run -d -p 8000:8000 --name caps-app $DOCKER_IMAGE:$IMAGE_TAG
                 '''
             }
