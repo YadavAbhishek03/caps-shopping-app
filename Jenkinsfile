@@ -41,6 +41,14 @@ pipeline {
             }
         }
 
+	stage('Trivy Security Scan') {
+    	    steps {
+                sh '''
+        	trivy image --severity HIGH,CRITICAL $DOCKER_IMAGE:latest
+        	'''
+    	    }
+	}
+
         stage('Login to DockerHub') {
             steps {
                 withCredentials([usernamePassword(
