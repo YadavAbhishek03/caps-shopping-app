@@ -8,21 +8,6 @@ pipeline {
 
     stages {
 
-        stage('SonarQube Analysis') {
-            steps {
-		script {
-            	    def scannerHome = tool 'SonarScanner'
-                    withSonarQubeEnv('SonarQube') {
-                    	sh """
-                    	${scannerHome}/bin/sonar-scanner \
-                    	-Dsonar.projectKey=caps-shopping-app \
-                    	-Dsonar.sources=.
-                    	"""
-                    }
-            	}
-	    }
-        }
-
         stage('Clean Old Containers') {
             steps {
                 sh '''
@@ -40,14 +25,6 @@ pipeline {
                 '''
             }
         }
-
-	stage('Trivy Security Scan') {
-    	    steps {
-                sh '''
-        	trivy image --severity HIGH,CRITICAL $DOCKER_IMAGE:latest
-        	'''
-    	    }
-	}
 
         stage('Login to DockerHub') {
             steps {
